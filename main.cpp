@@ -119,7 +119,9 @@ private:
     }
 
     bool IsTree() const {
-        return properties_.is_numbered_tree && properties_.is_acyclic;
+        return (properties_.is_numbered_tree && properties_.is_acyclic) ||
+            (properties_.is_numbered_tree && properties_.is_subcyclic) ||
+            (properties_.is_acyclic && properties_.is_subcyclic);
     }
 
     bool IsNumberedTree() const {
@@ -217,35 +219,6 @@ void LOG(Graph& g, std::ofstream& log_file) {
     log_file << "Среднее время: " << total_time / 10 << "мс\n";
 }
 
-void GenTree(int num) {
-    std::ofstream file("input/test" + std::to_string(num) + ".txt");
-    int n;
-
-    switch (num)
-    {
-    case 1:
-        n = 2;
-        break;
-    case 2:
-        n = 4;
-        break;
-    case 3:
-        n = 8;
-        break;
-    default:
-        break;
-    }
-    int x = 1;
-    for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < 2; j++) {
-            file << i << " " << x << "\n";
-            ++x;
-        }
-    }
-    file.close();
-}
-
-
 int main() {
     setlocale(LC_ALL, "rus");
 
@@ -259,7 +232,7 @@ int main() {
     {
     case 1: {
         std::cout << "Введите имя файла для проверки\n";
-        std::cout << "Важно, что бы файл хранился в директроии input/!\n";
+        std::cout << "!Важно, что бы файл хранился в директроии input/\n";
         std::string file_name;
         std::cin >> file_name;
         system("cls");
