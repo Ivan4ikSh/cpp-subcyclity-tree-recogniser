@@ -150,7 +150,44 @@ private:
         return true;
     }
 
+    bool IsSubcyclicException() {
+        std::unordered_set<std::string> triangle_vertices;
+        std::unordered_set<std::string> edge_vertices;
+
+        for (const auto& pair : adj_) {
+            const std::string& v = pair.first;
+            const auto& neighbors = pair.second;
+
+            if (neighbors.size() >= 2) {
+                for (size_t i = 0; i < neighbors.size(); ++i) {
+                    for (size_t j = i + 1; j < neighbors.size(); ++j) {
+                        if (AreConnected(neighbors[i], neighbors[j])) {
+                            triangle_vertices.insert(v);
+                            triangle_vertices.insert(neighbors[i]);
+                            triangle_vertices.insert(neighbors[j]);
+                        }
+                    }
+                }
+            }
+
+            if (neighbors.size() == 1) {
+                edge_vertices.insert(v);
+                edge_vertices.insert(neighbors[0]);
+            }
+        }
+
+        bool is_triangle_with_edge = triangle_vertices.size() >= 3 && edge_vertices.size() >= 2;
+        bool is_triangle_with_isolated_vertex = triangle_vertices.size() >= 3 && edge_vertices.size() == 1;
+
+        return !(is_triangle_with_edge || is_triangle_with_isolated_vertex);
+    }
+
     bool IsSubcyclic() {
+        if (!IsSubcyclicException()) {
+            output_ << "Нарушена субцикличность. Граф является исключением\n";
+            return false;
+        }
+
         for (const auto& pair1 : adj_) {
             for (const auto& pair2 : adj_) {
                 const auto& v = pair1.first;
