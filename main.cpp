@@ -179,8 +179,8 @@ private:
             }
         }
 
-        bool is_triangle_with_edge = triangle_vertices.size() >= 3 && edge_vertices.size() >= 2;
-        bool is_triangle_with_isolated_vertex = triangle_vertices.size() >= 3 && edge_vertices.size() == 1;
+        bool is_triangle_with_edge = triangle_vertices.size() == 3 && edge_vertices.size() == 2;
+        bool is_triangle_with_isolated_vertex = triangle_vertices.size() == 3 && edge_vertices.size() == 1;
 
         return !(is_triangle_with_edge || is_triangle_with_isolated_vertex);
     }
@@ -272,6 +272,8 @@ void TEST() {
 
 int main() {
     setlocale(LC_ALL, "rus");
+    TEST();
+    return 0;
 
     std::cout << "Выберете режим работы:\n";
     std::cout << "1. Проверить граф на дерево\n";
