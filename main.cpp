@@ -119,15 +119,18 @@ private:
     }
 
     bool IsTree() const {
-        return (properties_.is_numbered_tree && properties_.is_acyclic) ||
-            (properties_.is_numbered_tree && properties_.is_subcyclic) ||
-            (properties_.is_acyclic && properties_.is_subcyclic);
+        return properties_.is_acyclic && properties_.is_subcyclic;
     }
 
     bool IsNumberedTree() const {
         int vertex_count = GetVertexCount();
         int edge_count = CountEdges();
-        return edge_count == vertex_count - 1;
+
+        if (properties_.is_acyclic)
+            if (properties_.is_subcyclic) return true;
+            else return false;
+        else if(properties_.is_subcyclic) return false;
+        else return (edge_count == vertex_count - 1);
     }
 
     int CountEdges() const {
@@ -170,9 +173,9 @@ private:
                 }
             }
 
-            if (neighbors.size() == 1) {
+            if (neighbors.size() == 1 || neighbors.size() == 0) {
                 edge_vertices.insert(v);
-                edge_vertices.insert(neighbors[0]);
+                if (neighbors.size() != 0) edge_vertices.insert(neighbors[0]);
             }
         }
 
@@ -254,6 +257,17 @@ void LOG(Graph& g, std::ofstream& log_file) {
     }
 
     log_file << "Среднее время: " << total_time / 10 << "мс\n";
+}
+
+void TEST() {
+    CheckGraph("is-tree.txt");
+
+    CheckGraph("ac-err.txt");
+    CheckGraph("sub-err.txt");
+
+    CheckGraph("ac-sub-err.txt");
+    CheckGraph("ac-sub-exp1-err.txt");
+    CheckGraph("ac-sub-exp2-err.txt");
 }
 
 int main() {
