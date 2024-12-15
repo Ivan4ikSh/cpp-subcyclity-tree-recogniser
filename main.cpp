@@ -272,8 +272,6 @@ void TEST() {
 
 int main() {
     setlocale(LC_ALL, "rus");
-    TEST();
-    return 0;
 
     std::cout << "Выберете режим работы:\n";
     std::cout << "1. Проверить граф на дерево\n";
